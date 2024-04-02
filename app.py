@@ -152,4 +152,3 @@ page = st.sidebar.selectbox(
     "Select a feature",
     ["Create Appointment", "View Dashboard"]
 )
-
