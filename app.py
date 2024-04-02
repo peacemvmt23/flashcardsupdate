@@ -97,4 +97,32 @@ for task_id, task_data in enumerate(example_tasks):
         updated_task = st.text_input("Task", value=task_data["Task"])
         updated_category = st.text_input("Category", value=task_data["Category"])
         updated_due_date = st.date_input("Due Date", value=datetime.strptime(task_data["Due Date"], "%Y-%m-%d") if task_data["Due Date"] else "")
-        updated_priority = st.selectbox("Priority", options=["Low", "Medium", "High"], index=["Low", "
+        updated_priority = st.selectbox("Priority", options=["Low", "Medium", "High"], index=["Low", "Medium", "High"].index(task_data["Priority"]))
+        updated_subtasks = [st.text_input(f"Subtask {i+1}", value=subtask) for i, subtask in enumerate(task_data["Subtasks"])]
+        edit_task(task_id, updated_task, updated_category, updated_due_date.strftime("%Y-%m-%d") if updated_due_date else "", updated_priority, completed, updated_subtasks)
+    if st.button("Delete Task"):
+        delete_task(task_id)
+    st.write("---")
+
+# Add Task Section
+st.subheader("Add New Task")
+new_task = st.text_input("Task")
+new_category = st.text_input("Category")
+new_due_date = st.date_input("Due Date")
+new_priority = st.selectbox("Priority", options=["Low", "Medium", "High"])
+new_subtasks = [st.text_input(f"Subtask {i+1}") for i in range(5)]
+if st.button("Add Task", disabled=not new_task):
+    add_task(new_task, new_category, new_due_date.strftime("%Y-%m-%d") if new_due_date else "", new_priority, new_subtasks)
+
+# Sorting and Filtering
+st.subheader("Sorting and Filtering Options")
+sort_by = st.selectbox("Sort By", options=["Due Date", "Priority", "Category"])
+filter_category = st.selectbox("Filter by Category", options=["All"] + data["Category"].unique().tolist())
+filter_completed = st.checkbox("Show Completed Tasks")
+filtered_tasks = data.copy()
+if filter_category != "All":
+    filtered_tasks = filtered_tasks[filtered_tasks["Category"] == filter_category]
+if not filter_completed:
+    filtered_tasks = filtered_tasks[filtered_tasks["Completed"] == False]
+if sort_by == "Due Date":
+    filtered_tasks = filtered_tasks.sort_values(by=["Due Date
