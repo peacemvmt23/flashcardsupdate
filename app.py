@@ -125,4 +125,16 @@ if filter_category != "All":
 if not filter_completed:
     filtered_tasks = filtered_tasks[filtered_tasks["Completed"] == False]
 if sort_by == "Due Date":
-    filtered_tasks = filtered_tasks.sort_values(by=["Due Date
+    filtered_tasks = filtered_tasks.sort_values(by=["Due Date#"]})
+elif sort_by == "Priority":
+    filtered_tasks = filtered_tasks.sort_values(by=["Priority"])
+st.write(filtered_tasks)
+
+# Show completed tasks
+if filter_completed:
+    completed_tasks = data[data["Completed"] == True]
+    st.subheader("Completed Tasks")
+    st.write(completed_tasks)
+
+st.write("")
+st.caption("Made with ❤️ by Ojas Mittal")
