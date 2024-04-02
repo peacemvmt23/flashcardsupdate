@@ -79,12 +79,13 @@ example_tasks = [
 
 # Display tasks with additional features
 for task_data in example_tasks:
-    task_id = st.empty().id
     st.subheader(task_data["Task"])
     st.write(f"- Category: {task_data['Category']}")
     st.write(f"- Due Date: {task_data['Due Date']}")
     st.write(f"- Priority: {task_data['Priority']}")
-    completed = st.checkbox("Completed")
+    task_id = st.empty().id
+    completed = st.session_state.get(f"completed_{task_id}", False)
+    completed = st.checkbox("Completed", key=f"completed_{task_id}", value=completed)
     if st.button("Edit Task"):
         updated_task = st.text_input("Task", value=task_data["Task"])
         updated_category = st.text_input("Category", value=task_data["Category"])
