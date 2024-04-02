@@ -97,6 +97,4 @@ for task_id, task_data in enumerate(example_tasks):
         updated_task = st.text_input("Task", value=task_data["Task"])
         updated_category = st.text_input("Category", value=task_data["Category"])
         updated_due_date = st.date_input("Due Date", value=datetime.strptime(task_data["Due Date"], "%Y-%m-%d") if task_data["Due Date"] else "")
-        updated_priority = st.selectbox("Priority", options=["Low", "Medium", "High"], index=["Low", "Medium", "High"].index(task_data["Priority"]))
-        updated_subtasks = [st.text_input(f"Subtask {i+1}", value=subtask) for i, subtask in enumerate(task_data["Subtasks"])]
-        edit_task(task_id, updated_task, updated_category, updated_due_date.strftime("%Y-%m-%d") if updated_due_date else "", updated_priority, completed, updated_subtasks
+        updated_priority = st.selectbox("Priority", options=["Low", "Medium", "High"], index=["Low", "
