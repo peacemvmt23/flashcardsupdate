@@ -11,10 +11,11 @@ st.title("***Enhanced To-Do List Manager***")
 st.subheader("Organize, Prioritize, and Manage your tasks effectively!")
 
 # Local Database
+@st.cache(allow_output_mutation=True)
 def get_local_data():
     return pd.DataFrame(columns=["Task", "Category", "Due Date", "Priority", "Completed", "Subtasks"])
 
-data = st.cache(get_local_data)()
+data = get_local_data()
 
 # Functions for interacting with local data
 def save_local_data():
@@ -31,12 +32,13 @@ def add_task(task, category, due_date, priority, subtasks):
 
 def edit_task(task_id, updated_task, updated_category, updated_due_date, updated_priority, completed, updated_subtasks):
     global data
-    data.at[task_id, "Task"] = updated_task
-    data.at[task_id, "Category"] = updated_category
-    data.at[task_id, "Due Date"] = updated_due_date
-    data.at[task_id, "Priority"] = updated_priority
-    data.at[task_id, "Completed"] = completed
-    data.at[task_id, "Subtasks"] = updated_subtasks
+    task_index = task_id
+    data.at[task_index, "Task"] = updated_task
+    data.at[task_index, "Category"] = updated_category
+    data.at[task_index, "Due Date"] = updated_due_date
+    data.at[task_index, "Priority"] = updated_priority
+    data.at[task_index, "Completed"] = completed
+    data.at[task_index, "Subtasks"] = updated_subtasks
     save_local_data()
 
 def delete_task(task_id):
@@ -84,13 +86,14 @@ example_tasks = [
 # Display tasks with additional features
 for task_id, task_data in enumerate(example_tasks):
     task_key = f"task-{task_id}"
-    st.subheader(task_data["Task"])
+    st.subheader(task_data["Task"], key=task_key)
     st.write(f"- Category: {task_data['Category']}")
     st.write(f"- Due Date: {task_data['Due Date']}")
     st.write(f"- Priority: {task_data['Priority']}")
     st.write("- Subtasks:")
     for subtask_id, subtask in enumerate(task_data["Subtasks"]):
-        st.write(f"  - {subtask}")
+        subtask_key = f"{task_key}-subtask-{subtask_id}"
+        st.write(f"  - {subtask}", key=subtask_key)
     completed = st.checkbox("Completed", key=f"{task_key}-completed")
     if st.button("Edit Task", key=f"{task_key}-edit"):
         updated_task = st.text_input("Task", value=task_data["Task"], key=f"{task_key}-input")
@@ -100,24 +103,53 @@ for task_id, task_data in enumerate(example_tasks):
         updated_subtasks = st.text_area("Subtasks", value="\n".join(task_data["Subtasks"]), key=f"{task_key}-subtasks")
         edit_task(task_id, updated_task, updated_category, updated_due_date, updated_priority, completed, updated_subtasks.split("\n"))
 
+# Create Appointment Page
+elif page == "Create Appointment":
+    st.subheader("Create an Appointment")
+
+    # Get user input for appointment details
+    date = st.date_input("Select date:", key="date")
+    time = st.time_input("Select time:", key="time")
+    title = st.text_input("Enter title:", key="title")
+    description = st.text_area("Enter description:", key="description")
+    location = st.text_input("Enter location:", key="location")
+    organizer = st.text_input("Enter organizer:", key="organizer")
+    participants = st.text_input("Enter participants (comma-separated):", key="participants")
+    reminder = st.checkbox("Set reminder", key="reminder")
+    reminder_time = st.time_input("Reminder time:", key="reminder_time") if reminder else None
+    reminder_date = st.date_input("Reminder date:", key="reminder_date") if reminder else None
+
+    # Display appointment details
+    st.write("Your Appointment Details:")
+    st.write(f"Date: {date}")
+    st.write(f"Time: {time}")
+    st.write(f"Title: {title}")
+    st.write(f"Description: {description}")
+    st.write(f"Location: {location}")
+    st.write(f"Organizer: {organizer}")
+    st.write(f"Participants: {participants}")
+    if reminder:
+        st.write("Reminder Set:")
+        st.write(f"Reminder Date: {reminder_date}")
+        st.write(f"Reminder Time: {reminder_time}")
+
+    # Save appointment to data dictionary
+    data["Appointments"].append({
+        "Date": date, 
+        "Time": time, 
+        "Title": title, 
+        "Description": description, 
+        "Location": location, 
+        "Organizer": organizer, 
+        "Participants": participants.split(','), 
+        "Reminder": reminder, 
+        "Reminder Time": reminder_time, 
+        "Reminder Date": reminder_date
+    })
+
 # Sidebar navigation
 page = st.sidebar.selectbox(
     "Select a feature",
-    ["Create Flashcard", "Create Appointment", "Set Goals", "Create Social Post", "Quote of the Day", "Upload Image", "View Dashboard"]
+    ["Create Appointment", "View Dashboard"]
 )
 
-# Main content based on user selection
-if page == "Create Flashcard":
-    create_flashcard()
-elif page == "Create Appointment":
-    create_appointment()
-elif page == "Set Goals":
-    set_goals()
-elif page == "Create Social Post":
-    create_social_post()
-elif page == "Quote of the Day":
-    quote_of_the_day()
-elif page == "Upload Image":
-    upload_image()
-elif page == "View Dashboard":
-    view_dashboard()
