@@ -11,7 +11,7 @@ st.title("***Enhanced To-Do List Manager***")
 st.subheader("Organize, Prioritize, and Manage your tasks effectively!")
 
 # Local Database
-@st.cache(allow_output_mutation=True)
+@st.cache_data(allow_output_mutation=True)
 def get_local_data():
     return pd.DataFrame(columns=["Task", "Category", "Due Date", "Priority", "Completed", "Subtasks"])
 
@@ -107,10 +107,10 @@ def create_flashcard():
     st.subheader("Create a Flashcard")
 
     # Get user input for card type (question or answer)
-    card_type = st.radio("Select card type:", ["Question", "Answer"])
+    card_type = st.radio("Select card type:", ["Question", "Answer"], key="card_type")
 
     # Get user input for card content
-    card_content = st.text_area(f"Enter {card_type.lower()} content:")
+    card_content = st.text_area(f"Enter {card_type.lower()} content:", key="card_content")
 
     # Display flashcard content
     st.write(f"Your {card_type} Card:")
@@ -123,10 +123,10 @@ def create_appointment():
     st.subheader("Create an Appointment")
 
     # Get user input for appointment details
-    date = st.date_input("Select date:")
-    time = st.time_input("Select time:")
-    title = st.text_input("Enter title:")
-    description = st.text_area("Enter description:")
+    date = st.date_input("Select date:", key="date")
+    time = st.time_input("Select time:", key="time")
+    title = st.text_input("Enter title:", key="title")
+    description = st.text_area("Enter description:", key="description")
 
     # Display appointment details
     st.write("Your Appointment Details:")
