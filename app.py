@@ -86,13 +86,13 @@ for task_data in example_tasks:
     task_id = st.empty().id
     completed = st.session_state.get(f"completed_{task_id}", False)
     completed = st.checkbox("Completed", key=f"completed_{task_id}", value=completed)
-    if st.button("Edit Task"):
+    if st.button("Edit Task", key=f"edit_{task_id}"):
         updated_task = st.text_input("Task", value=task_data["Task"])
         updated_category = st.text_input("Category", value=task_data["Category"])
         updated_due_date = st.date_input("Due Date", value=datetime.strptime(task_data["Due Date"], "%Y-%m-%d") if task_data["Due Date"] else "")
         updated_priority = st.selectbox("Priority", options=["Low", "Medium", "High"], index=["Low", "Medium", "High"].index(task_data["Priority"]))
         edit_task(task_id, updated_task, updated_category, updated_due_date.strftime("%Y-%m-%d") if updated_due_date else "", updated_priority, completed)
-    if st.button("Delete Task"):
+    if st.button("Delete Task", key=f"delete_{task_id}"):
         delete_task(task_id)
     st.write("---")
 
@@ -102,7 +102,7 @@ new_task = st.text_input("Task")
 new_category = st.text_input("Category")
 new_due_date = st.date_input("Due Date")
 new_priority = st.selectbox("Priority", options=["Low", "Medium", "High"])
-if st.button("Add Task", disabled=not new_task):
+if st.button("Add Task", key="add_new_task", disabled=not new_task):
     add_task(new_task, new_category, new_due_date.strftime("%Y-%m-%d") if new_due_date else "", new_priority)
 
 # Sorting and Filtering
