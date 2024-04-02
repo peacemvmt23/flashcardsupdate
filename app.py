@@ -91,13 +91,13 @@ for task_id, task_data in enumerate(example_tasks):
     st.write("- Subtasks:")
     for subtask_id, subtask in enumerate(task_data["Subtasks"]):
         st.write(f"  - {subtask}")
-    completed = st.checkbox("Completed")
-    if st.button("Edit Task"):
-        updated_task = st.text_input("Task", value=task_data["Task"])
-        updated_category = st.text_input("Category", value=task_data["Category"])
-        updated_due_date = st.date_input("Due Date", value=datetime.strptime(task_data["Due Date"], "%Y-%m-%d") if task_data["Due Date"] else "")
-        updated_priority = st.selectbox("Priority", options=["Low", "Medium", "High"], index=["Low", "Medium", "High"].index(task_data["Priority"]))
-        updated_subtasks = st.text_area("Subtasks", value="\n".join(task_data["Subtasks"]))
+    completed = st.checkbox("Completed", key=f"{task_key}-completed")
+    if st.button("Edit Task", key=f"{task_key}-edit"):
+        updated_task = st.text_input("Task", value=task_data["Task"], key=f"{task_key}-input")
+        updated_category = st.text_input("Category", value=task_data["Category"], key=f"{task_key}-category")
+        updated_due_date = st.date_input("Due Date", value=datetime.strptime(task_data["Due Date"], "%Y-%m-%d") if task_data["Due Date"] else "", key=f"{task_key}-date")
+        updated_priority = st.selectbox("Priority", options=["Low", "Medium", "High"], index=["Low", "Medium", "High"].index(task_data["Priority"]), key=f"{task_key}-priority")
+        updated_subtasks = st.text_area("Subtasks", value="\n".join(task_data["Subtasks"]), key=f"{task_key}-subtasks")
         edit_task(task_id, updated_task, updated_category, updated_due_date, updated_priority, completed, updated_subtasks.split("\n"))
 
 # Sidebar navigation
