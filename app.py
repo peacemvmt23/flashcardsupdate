@@ -85,15 +85,16 @@ example_tasks = [
 
 # Display tasks with additional features
 for task_id, task_data in enumerate(example_tasks):
-    st.subheader(task_data["Task"])
+    task_key = f"task_{task_id}"
+    st.subheader(task_data["Task"], key=task_key)
     st.write(f"- Category: {task_data['Category']}")
     st.write(f"- Due Date: {task_data['Due Date']}")
     st.write(f"- Priority: {task_data['Priority']}")
     st.write("- Subtasks:")
     for subtask in task_data["Subtasks"]:
         st.write(f"  - {subtask}")
-    completed = st.checkbox("Completed")
-    if st.button("Edit Task"):
+    completed = st.checkbox("Completed", key=f"completed_{task_id}")
+    if st.button("Edit Task", key=f"edit_button_{task_id}"):
         updated_task = st.text_input("Task", value=task_data["Task"], key=f"updated_task_{task_id}")
         updated_category = st.text_input("Category", value=task_data["Category"], key=f"updated_category_{task_id}")
         updated_due_date = st.date_input("Due Date", value=datetime.strptime(task_data["Due Date"], "%Y-%m-%d") if task_data["Due Date"] else "", key=f"updated_due_date_{task_id}")
